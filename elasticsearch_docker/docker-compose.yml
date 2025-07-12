@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: elasticsearch:8.15.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - es_net
+
+volumes:
+  es_data:
+
+networks:
+  es_net:
+    driver: bridge
