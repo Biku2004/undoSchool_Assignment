@@ -22,3 +22,7 @@
   "tagline": "You Know, for Search"
 }
 ```
+### Sample Data
+- The `sample-courses.json` file is located in `src/main/resources`.
+- It contains 50+ course objects with varied categories, types, prices, session dates etc.
+- The application automatically loads this file to index data into Elasticsearch on startup.
