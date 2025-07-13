@@ -136,7 +136,11 @@ Output Example :
     ]
 }
 ```
-
+## Testing
+1. Make sure docker is open.
+2. run `mvn test` on the spring file folder.
+    - This will connect with docker and install elastic-Search on a temporary container for testing
+3. Will see the Test Results.
 
 
 
