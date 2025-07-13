@@ -46,6 +46,11 @@ public class CourseSearchController {
         return new SearchResponse(searchHits.getTotalHits(), courses);
     }
 
+    @GetMapping("/suggest")
+    public List<String> suggest(@RequestParam String q) {
+        return searchService.suggestTitles(q);
+    }
+
     public static class SearchResponse {
         private final long total;
         private final List<CourseSummary> courses;
@@ -55,7 +60,6 @@ public class CourseSearchController {
             this.courses = courses;
         }
 
-        // Getters
         public long getTotal() {
             return total;
         }
@@ -80,7 +84,6 @@ public class CourseSearchController {
             this.nextSessionDate = nextSessionDate;
         }
 
-        // Getters
         public String getId() {
             return id;
         }

@@ -10,22 +10,29 @@ import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CourseSearchService {
 
+    private final ElasticsearchOperations elasticsearchOperations;
+
     @Autowired
-    private ElasticsearchOperations elasticsearchOperations;
+    public CourseSearchService(ElasticsearchOperations elasticsearchOperations) {
+        this.elasticsearchOperations = elasticsearchOperations;
+    }
 
     public SearchHits<CourseDocument> searchCourses(String query, Integer minAge, Integer maxAge, String category,
                                                     String type, Double minPrice, Double maxPrice, String startDate,
                                                     String sort, int page, int size) {
         Criteria criteria = new Criteria();
 
-        // Full-text search on title and description
+        // Full-text search on title and description with fuzziness on title
         if (query != null && !query.isEmpty()) {
-            Criteria titleCriteria = new Criteria("title").matches(query);
-            Criteria descCriteria = new Criteria("description").matches(query);
-            criteria = titleCriteria.or(descCriteria);
+            Criteria titleCriteria = new Criteria("title").fuzzy(query); // Enable fuzzy matching
+            Criteria descCriteria = new Criteria("description").matches(query); // Standard match for description
+            criteria = titleCriteria.or(descCriteria); // Combine both criteria
         }
 
         // Range filters
@@ -69,4 +76,18 @@ public class CourseSearchService {
 
         return elasticsearchOperations.search(searchQuery, CourseDocument.class);
     }
+
+    public List<String> suggestTitles(String partialTitle) {
+        if (partialTitle == null || partialTitle.isEmpty()) {
+            return List.of();
+        }
+        Criteria criteria = new Criteria("title").startsWith(partialTitle); // Prefix match for autocomplete
+        CriteriaQuery query = new CriteriaQuery(criteria, PageRequest.of(0, 10));
+        SearchHits<CourseDocument> searchHits = elasticsearchOperations.search(query, CourseDocument.class);
+        return searchHits.getSearchHits().stream()
+                .map(hit -> hit.getContent().getTitle())
+                .distinct() // Ensure no duplicates
+                .collect(Collectors.toList());
+    }
 }
+

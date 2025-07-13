@@ -33,6 +33,9 @@ public class DataLoaderService {
         ClassPathResource resource = new ClassPathResource("sample-courses.json");
         List<CourseDocument> courses = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
 
+        // Set suggest field to title for autocomplete
+        courses.forEach(course -> course.setSuggest(course.getTitle()));
+
         // Bulk index
         courses.forEach(course -> elasticsearchTemplate.save(course));
     }

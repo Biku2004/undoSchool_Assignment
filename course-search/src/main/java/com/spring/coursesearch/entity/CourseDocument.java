@@ -2,6 +2,7 @@ package com.spring.coursesearch.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -14,6 +15,10 @@ public class CourseDocument {
 
     @Field(type = FieldType.Text)
     private String title;
+
+    // For Fuzzy Search
+    @CompletionField
+    private String suggest;
 
     @Field(type = FieldType.Text)
     private String description;
