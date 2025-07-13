@@ -27,7 +27,8 @@
 - It contains 50+ course objects with varied categories, types, prices, session dates etc.
 - The application automatically loads this file to index data into Elasticsearch on startup.
 
-## Build and Run the Application
+## Assignment - A
+### Build and Run the Application
 1. Clone the repository: `git clone https://github.com/Biku2004/undoSchool_Assignment.git`
 2. Navigate to the project directory: `cd course-search`
 3. Build the project: `mvn clean install`
@@ -52,9 +53,90 @@
   ```bash
     "http://localhost:8080/api/search?q=algebra&category=Math&minAge=10&maxAge=14"
   ```
+Output Example : 
+```
+{
+    "total": 2,
+    "courses": [
+        {
+            "id": "course_1",
+            "title": "Introduction to Algebra",
+            "category": "Math",
+            "price": 49.99,
+            "nextSessionDate": "2025-07-15T10:00:00Z"
+        },
+        {
+            "id": "course_37",
+            "title": "Pre-Algebra Prep",
+            "category": "Math",
+            "price": 45.0,
+            "nextSessionDate": "2025-08-10T10:00:00Z"
+        }
+    ]
+}
+```
+
   ```bash
     "http://localhost:8080/api/search?page=1&size=5&sort=priceAsc"
   ```
   
+## Assignment B : Autocomplete Suggestions & Fuzzy Search
+1. Replaced the original exact match logic with fuzzy search on the title field, enabling to get search results even on typos.
+2. Implemented a new method(suggestTitles) and a field(suggest) o handle autocomplete suggestions.
+3. Added API endpoints for theses to work.
+
+### Autocomplete Suggestions
+
+- **Endpoint**: `GET /api/search/suggest?q={partialTitle}`
+- **Parameters**:
+  - `q`: Keyword for auto complete suggestion
+
+- **Example**:
+  ```bash
+    "http://localhost:8080/api/search/suggest?q=Staticstisx"
+  ```
+Output Example : 
+```
+[
+    "Statistics for Beginners",
+    "Probability and Statistics"
+]
+```
+
+
+### Fuzzy Search
+
+- **Endpoint**: `GET /api/search?q={Title}`
+- **Parameters**:
+  - `q`: Keyword for Searching the data
+
+- **Example**:
+  ```bash
+    "http://localhost:8080/api/search?q=statistix"
+  ```
+Output Example : 
+```
+{
+    "total": 2,
+    "courses": [
+        {
+            "id": "course_43",
+            "title": "Probability and Statistics",
+            "category": "Math",
+            "price": 68.0,
+            "nextSessionDate": "2025-08-25T09:00:00Z"
+        },
+        {
+            "id": "course_17",
+            "title": "Statistics for Beginners",
+            "category": "Math",
+            "price": 65.0,
+            "nextSessionDate": "2025-10-01T09:00:00Z"
+        }
+    ]
+}
+```
+
+
 
 
