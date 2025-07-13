@@ -22,7 +22,39 @@
   "tagline": "You Know, for Search"
 }
 ```
-### Sample Data
+## Sample Data
 - The `sample-courses.json` file is located in `src/main/resources`.
 - It contains 50+ course objects with varied categories, types, prices, session dates etc.
 - The application automatically loads this file to index data into Elasticsearch on startup.
+
+## Build and Run the Application
+1. Clone the repository: `git clone https://github.com/Biku2004/undoSchool_Assignment.git`
+2. Navigate to the project directory: `cd course-search`
+3. Build the project: `mvn clean install`
+4. Run the application: `mvn spring-boot:run`
+5. The application will start on `http://localhost:8080` and automatically index `sample-courses.json` into the `courses` index.
+
+## API Endpoints
+
+#### Search Courses
+- **Endpoint**: `GET /api/search`
+- **Parameters**:
+  - `q`: Keyword for full-text search
+  - `minAge`, `maxAge`: Age range filter
+  - `category`: Exact category (e.g., "Math")
+  - `type`: Exact type (e.g., "COURSE")
+  - `minPrice`, `maxPrice`: Price range filter
+  - `startDate`: ISO-8601 date (e.g., "2025-07-01T00:00:00Z")
+  - `sort`: `upcoming` (default), `priceAsc`, `priceDesc`
+  - `page`: Page number (default: 0)
+  - `size`: Results per page (default: 10)
+- **Example**:
+  ```bash
+    "http://localhost:8080/api/search?q=algebra&category=Math&minAge=10&maxAge=14"
+  ```
+  ```bash
+    "http://localhost:8080/api/search?page=1&size=5&sort=priceAsc"
+  ```
+  
+
+
